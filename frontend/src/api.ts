@@ -53,3 +53,51 @@ export async function analyze(mode: "summarize"|"simplify"|"qa", text: string, q
     throw new Error(`${ex?.message || "Analyze failed"}`);
   }
 }
+
+export async function enhanceSummary(text: string) {
+  try {
+    const r = await fetch(`${API}/enhance-summary`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    return await handleResponse(r);
+  } catch (ex: any) {
+    throw new Error(`${ex?.message || "Enhance summary failed"}`);
+  }
+}
+
+export async function riskAnalysis(text: string) {
+  try {
+    const r = await fetch(`${API}/risk-analysis`, {
+      method: "POST", 
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    return await handleResponse(r);
+  } catch (ex: any) {
+    throw new Error(`${ex?.message || "Risk analysis failed"}`);
+  }
+}
+
+export async function translateHindi(text: string) {
+  try {
+    const r = await fetch(`${API}/translate-hindi`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify({ text })
+    });
+    return await handleResponse(r);
+  } catch (ex: any) {
+    throw new Error(`${ex?.message || "Hindi translation failed"}`);
+  }
+}
+
+export async function googleAIStatus() {
+  try {
+    const r = await fetch(`${API}/google-ai-status`, { method: "GET" });
+    return await handleResponse(r);
+  } catch (ex: any) {
+    throw new Error(`${ex?.message || "Status check failed"}`);
+  }
+}

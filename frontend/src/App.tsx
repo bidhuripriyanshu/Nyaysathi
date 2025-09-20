@@ -7,7 +7,7 @@ import SummarySection from "./components/SummarySection";
 import QASection from "./components/QASection";
 import ClauseAnalysis from "./components/ClauseAnalysis";
 import GoogleAI from "./components/GoogleAI";
-import { ping, API } from "./api";
+import { ping, API, enhanceSummary, riskAnalysis, translateHindi } from "./api";
 
 export default function App() {
   const [text, setText] = React.useState("");
@@ -61,7 +61,13 @@ export default function App() {
             </div>
 
             <div style={{ marginTop: '2rem' }}>
-              <GoogleAI text={text} summary={summary} />
+              <GoogleAI 
+                text={text} 
+                summary={summary}
+                enhanceSummary={enhanceSummary}
+                riskAnalysis={riskAnalysis}
+                translateHindi={translateHindi}
+              />
             </div>
           </motion.div>
         )}
@@ -69,3 +75,4 @@ export default function App() {
     </div>
   );
 }
+

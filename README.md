@@ -5,7 +5,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg)](https://fastapi.tiangolo.com/)
 [![Google AI](https://img.shields.io/badge/Google%20AI-Gemini-orange.svg)](https://ai.google.dev/)
 
-
 > **Democratizing Legal Document Understanding with Dual AI Technology**
 
 NyaySaathi is an intelligent web application that makes complex legal documents accessible to everyone. Using a hybrid AI approach with local processing (Ollama) and cloud enhancement (Google AI), it provides contract summarization, risk analysis, clause simplification, and multilingual translation.
@@ -45,29 +44,6 @@ NyaySaathi is an intelligent web application that makes complex legal documents 
 - **Responsive Layout**: Works on desktop and mobile
 - **Real-time Status**: Connection monitoring and feedback
 - **Card-based UI**: Intuitive organization and navigation
-=======
-### 📄 *Document Processing*
-- *Multi-format Upload*: PDF, DOCX, TXT with drag-and-drop interface
-- *Smart Text Extraction*: Automatic parsing and section detection
-- *Risk Keyword Detection*: Highlights dangerous terms automatically
-
-### 🤖 *Dual AI Analysis*
-- *Local AI (Ollama)*: Privacy-first processing with Llama 3.2
-- *Google AI (Gemini)*: Cloud-powered enhancement and risk analysis
-- *Hybrid Intelligence*: Best of both privacy and accuracy
-
-### 🧠 *Smart Features*
-- *5-Point Summaries*: Contract overviews in plain language
-- *Risk Analysis*: Professional-grade legal risk assessment
-- *Clause Simplification*: Complex legal jargon to simple terms
-- *Interactive Q&A*: Ask questions about your documents
-- *Hindi Translation*: Multilingual accessibility for Indian users
-
-### 🎨 *Modern Interface*
-- *Professional Design*: Dark theme with smooth animations
-- *Responsive Layout*: Works on desktop and mobile
-- *Real-time Status*: Connection monitoring and feedback
-- *Card-based UI*: Intuitive organization and navigation
 
 
 
@@ -83,17 +59,11 @@ NyaySaathi is an intelligent web application that makes complex legal documents 
 
 
 1. **Clone the repository**
-=======
-1. *Clone the repository*
-git clone https://github.com/NigHtMare16K/Nyaysathi.git
 cd Nyaysathi
 
 text
 
-<<<<<<< HEAD
 2. **Setup Backend**
-=======
-2. *Setup Backend*
 cd backend
 python -m venv .venv
 source .venv/bin/activate # Windows: .venv\Scripts\activate
@@ -101,10 +71,7 @@ pip install -r requirements.txt
 
 text
 
-<<<<<<< HEAD
 3. **Setup Frontend**
-=======
-3. *Setup Frontend*
 cd ../frontend
 npm install
 
@@ -114,14 +81,6 @@ text
 
 4. *Configure AI Services*
 Install and setup Ollama
-ollama pull llama3.2
-
-Add your Google AI Studio API key to backend/gemini_client.py
-Get free key at: https://aistudio.google.com/
-text
-
-5. **Run the Application**
-5. *Run the Application*
 Terminal 1: Start backend
 cd backend
 uvicorn app:app --reload --port 8000
@@ -139,7 +98,6 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 ## 💡 Usage Examples
 
 ### Basic Workflow
-
 1. **Upload** your legal document (contract, agreement, etc.)
 2. **Generate Summary** using local AI for privacy
 3. **Enhance** with Google AI for professional insights
@@ -172,6 +130,7 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 ### AI Models
 - **Llama 3.2** (local processing)
 - **Google Gemini 1.5 Flash** (cloud enhancement)
+<<<<<<< HEAD
 
 1. *Upload* your legal document (contract, agreement, etc.)
 2. *Generate Summary* using local AI for privacy
@@ -205,6 +164,8 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 - *Llama 3.2* (local processing)
 - *Google Gemini 1.5 Flash* (cloud enhancement)
 >>>>>>> 32761dfe8c0c571598b4021dd0d48ce083f08778
+=======
+>>>>>>> upstream/main
 
 ---
 
@@ -233,18 +194,21 @@ text
 ## 🔧 Configuration
 
 ### Environment Variables
+<<<<<<< HEAD
 
 Create `backend/.env` (optional):
 
 Create backend/.env (optional):
 >>>>>>> 32761dfe8c0c571598b4021dd0d48ce083f08778
+=======
+Create `backend/.env`:
+>>>>>>> upstream/main
 GEMINI_API_KEY=your-google-ai-studio-key
 OLLAMA_URL=http://localhost:11434
 
 text
 
 ### Customization
-<<<<<<< HEAD
 - **Models**: Change AI models in `gemini_client.py` and via Ollama
 - **Prompts**: Modify templates in `prompts.py`
 - **Styling**: Update themes in `frontend/src/index.css`
@@ -318,7 +282,6 @@ Created by *NigHtMare16K* and contributors
 
 ## 🙏 Acknowledgments
 
-
 - **Google AI Studio** for free AI API access
 - **Ollama** for local LLM infrastructure  
 - **React & FastAPI** communities for excellent frameworks
@@ -338,10 +301,9 @@ If NyaySaathi helps you understand legal documents better, please consider givin
 
 <div align="center">
 
-
 **Made with ❤️ for accessible legal technology**
 
-[🌟 Star this repo](https://github.com/NigHtMare16K/Nyaysathi) • [🍴 Fork it](https://github.com/NigHtMare16K/Nyaysathi/fork) • [📝 Contribute](https://github.com/NigHtMare16K/Nyaysathi/blob/main/CONTRIBUTING.md)
+[🌟 Star this repo](https://github.com/daiwikpc/Nyaysathi) • [🍴 Fork it](https://github.com/daiwikpc/Nyaysathi/fork) • [📝 Contribute](https://github.com/daiwikpc/Nyaysathi/blob/main/CONTRIBUTING.md)
 
 </div>
 

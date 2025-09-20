@@ -15,6 +15,8 @@ export default function GoogleAI({ text, summary }: GoogleAIProps) {
   const callGoogleAPI = async (endpoint: string, setter: (val: string) => void, loadingKey: string) => {
     setLoading(loadingKey);
     try {
+      console.log(`🔍 Calling: ${endpoint}`);
+      
       const response = await fetch(`http://localhost:8000/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -22,10 +24,28 @@ export default function GoogleAI({ text, summary }: GoogleAIProps) {
       });
       
       const data = await response.json();
-      const key = endpoint.replace('-', '_');
-      if (data[key]) {
-        setter(data[key]);
+      console.log(`📥 Response:`, data);
+      
+      // Fix: Use correct response keys
+      let resultKey;
+      if (endpoint === 'enhance-summary') {
+        resultKey = 'enhanced_summary';
+      } else if (endpoint === 'risk-analysis') {
+        resultKey = 'risk_analysis';
+      } else if (endpoint === 'translate-hindi') {
+        resultKey = 'hindi_translation';  // This was the missing piece!
       }
+      
+      console.log(`🔑 Looking for key: ${resultKey}`);
+      
+      if (data[resultKey]) {
+        console.log(`✅ Found result: ${data[resultKey].substring(0, 100)}...`);
+        setter(data[resultKey]);
+      } else {
+        console.log(`❌ No data found for key: ${resultKey}`, data);
+      }
+    } catch (error) {
+      console.error('❌ Error:', error);
     } finally {
       setLoading("");
     }
