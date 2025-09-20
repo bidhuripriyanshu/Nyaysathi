@@ -5,10 +5,10 @@ from typing import Optional, Literal
 from dotenv import load_dotenv
 
 # local imports because working dir is backend/
-from extract import extract_text, split_sections, highlight_risks
-from prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
-from ollama_client import generate
-from gemini_client import gemini_client
+from backend.extract import extract_text, split_sections, highlight_risks
+from backend.prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
+from backend.ollama_client import generate
+from backend.gemini_client import gemini_client
 
 load_dotenv(override=False)
 
