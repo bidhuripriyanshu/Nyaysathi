@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import Optional, Literal
 from dotenv import load_dotenv
 
-# local imports because working dir is backend/
+# local imports (with backend prefix)
 from backend.extract import extract_text, split_sections, highlight_risks
 from backend.prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
 from backend.ollama_client import generate
