@@ -31,6 +31,7 @@ uritemplate==4.2.0
 urllib3==2.5.0
 fastapi
 uvicorn[standard]
+pypdf
 
 
 
