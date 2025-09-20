@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-# 🏛️ NyaySaathi: AI-Powered Legal Document Assistant
-=======
-# 🏛 NyaySaathi: AI-Powered Legal Document Assistant
->>>>>>> 32761dfe8c0c571598b4021dd0d48ce083f08778
 
+# 🏛️ NyaySaathi: AI-Powered Legal Document Assistant
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg)](https://fastapi.tiangolo.com/)
