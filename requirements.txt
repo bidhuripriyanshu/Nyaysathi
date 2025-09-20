@@ -33,6 +33,7 @@ fastapi
 uvicorn[standard]
 pypdf
 python-docx
+python-multipart
 
 
 
