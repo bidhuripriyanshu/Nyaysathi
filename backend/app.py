@@ -8,10 +8,12 @@ from dotenv import load_dotenv
 from fastapi.exception_handlers import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-# local imports
+# local imports (with backend prefix)
 from backend.extract import extract_text, split_sections, highlight_risks
 from backend.prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
-from backend.gemini_client import generate as gemini_generate  # Gemini client
+from backend.ollama_client import generate
+from backend.gemini_client import gemini_client
+
 
 # Load environment variables
 load_dotenv(override=False)
@@ -74,6 +76,8 @@ async def upload(file: UploadFile = File(...)):
     sections = split_sections(text)
     risks = highlight_risks(text)
     return {"text": text, "sections": sections, "risks": risks}
+
+
 
 # Analyze text
 @app.post("/analyze")
