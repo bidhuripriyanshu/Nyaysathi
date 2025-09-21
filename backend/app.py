@@ -118,7 +118,7 @@ async def analyze(body: AnalyzeBody):
 
     out = generate(prompt, model=body.model, options={"temperature": 0.3, "num_predict": 512})
     return {"result": out}
-)
+
 
 
 @app.post("/enhance-summary")
