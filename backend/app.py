@@ -1,8 +1,11 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Optional, Literal
 from dotenv import load_dotenv
+from fastapi.exception_handlers import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # local imports (with backend prefix)
 from backend.extract import extract_text, split_sections, highlight_risks
@@ -16,14 +19,39 @@ import os
 load_dotenv(override=False)
 app = FastAPI(title="Local Legal Assistant API")
 
-# CORS setup
+# ✅ CORS setup (for all origins during testing)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://nyaysathi-tawny.vercel.app", "http://localhost:3000", "http://localhost:5173"],
+    allow_origins=["*"],  # change to specific domains in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ✅ Custom error handlers to always return CORS headers
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": str(exc.detail)},
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()},
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc)},
+        headers={"Access-Control-Allow-Origin": "*"}
+    )
 
 
 # Health check
@@ -58,7 +86,7 @@ async def upload(file: UploadFile = File(...)):
 @app.post("/analyze")
 async def analyze(body: AnalyzeBody):
     if not body.text:
-        return {"error": "text required"}
+        raise HTTPException(status_code=400, detail="text required")
 
     if body.mode == "summarize":
         prompt = SUMMARIZE_PROMPT.format(content=body.text[:120000])
@@ -76,7 +104,8 @@ async def analyze(body: AnalyzeBody):
         out = generate(prompt, model=body.model, options={"temperature": 0.2, "num_predict": 384})
         return {"result": out}
 
-    return {"error": "unsupported mode"}
+    raise HTTPException(status_code=400, detail="unsupported mode")
+
 
 @app.post("/enhance-summary")
 async def enhance_summary(body: SimpleBody):
