@@ -83,28 +83,42 @@ async def upload(file: UploadFile = File(...)):
 
 
 # Analyze text API
+GEMINI_MODEL = "gemini-1.5-flash-latest"
+
 @app.post("/analyze")
 async def analyze(body: AnalyzeBody):
     if not body.text:
         raise HTTPException(status_code=400, detail="text required")
 
-    if body.mode == "summarize":
-        prompt = SUMMARIZE_PROMPT.format(content=body.text[:120000])
-        out = generate(prompt, model=body.model, options={"temperature": 0.3, "num_predict": 512})
-        return {"result": out}
+    # ✅ Use Gemini client if llama3.2
+    if body.model == "llama3.2":
+        model = GEMINI_MODEL
+        prompt_text = body.text[:2000]  # Gemini token limit
+        # Map modes to Gemini functions
+        if body.mode == "summarize":
+            out = gemini_client.enhance_summary(prompt_text)
+        elif body.mode == "simplify":
+            out = gemini_client.enhance_summary(prompt_text)  # Gemini simplify not separate
+        elif body.mode == "qa":
+            q = body.question or ""
+            out = gemini_client.enhance_summary(f"Question: {q}\nContent: {prompt_text}")
+        else:
+            raise HTTPException(status_code=400, detail="unsupported mode")
+        return {"result": out, "powered_by": "Google Gemini AI"}
 
-    if body.mode == "simplify":
-        prompt = SIMPLIFY_PROMPT.format(content=body.text[:16000])
-        out = generate(prompt, model=body.model, options={"temperature": 0.3, "num_predict": 400})
-        return {"result": out}
+    # Otherwise, fallback to existing generate (if you have other models running locally)
+    prompt = {
+        "summarize": SUMMARIZE_PROMPT.format(content=body.text[:120000]),
+        "simplify": SIMPLIFY_PROMPT.format(content=body.text[:16000]),
+        "qa": QA_PROMPT.format(content=body.text[:120000], question=body.question or ""),
+    }.get(body.mode)
 
-    if body.mode == "qa":
-        q = body.question or ""
-        prompt = QA_PROMPT.format(content=body.text[:120000], question=q)
-        out = generate(prompt, model=body.model, options={"temperature": 0.2, "num_predict": 384})
-        return {"result": out}
+    if not prompt:
+        raise HTTPException(status_code=400, detail="unsupported mode")
 
-    raise HTTPException(status_code=400, detail="unsupported mode")
+    out = generate(prompt, model=body.model, options={"temperature": 0.3, "num_predict": 512})
+    return {"result": out}
+)
 
 
 @app.post("/enhance-summary")
