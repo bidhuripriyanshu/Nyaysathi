@@ -19,8 +19,8 @@ app = FastAPI(title="Local Legal Assistant API")
 # CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://nyaysathi-tawny.vercel.app", "http://localhost:3000"],
-    allow_credentials=False,
+    allow_origins=["https://nyaysathi-tawny.vercel.app", "http://localhost:3000", "http://localhost:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
