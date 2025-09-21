@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -7,34 +8,32 @@ from dotenv import load_dotenv
 from fastapi.exception_handlers import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-# local imports (with backend prefix)
+# local imports
 from backend.extract import extract_text, split_sections, highlight_risks
 from backend.prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
-from backend.ollama_client import generate
-from backend.gemini_client import gemini_client
+from backend.gemini_client import generate as gemini_generate  # Gemini client
 
-import os
-
-# load environment variables
+# Load environment variables
 load_dotenv(override=False)
+
 app = FastAPI(title="Local Legal Assistant API")
 
-# ✅ CORS setup (for all origins during testing)
+# ✅ CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change to specific domains in production
+    allow_origins=["*"],  # production me change kar
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Custom error handlers to always return CORS headers
+# ✅ Custom error handlers
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": str(exc.detail)},
-        headers={"Access-Control-Allow-Origin": "*"}
+        headers={"Access-Control-Allow-Origin": "*"},
     )
 
 @app.exception_handler(RequestValidationError)
@@ -42,7 +41,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors()},
-        headers={"Access-Control-Allow-Origin": "*"}
+        headers={"Access-Control-Allow-Origin": "*"},
     )
 
 @app.exception_handler(Exception)
@@ -50,29 +49,24 @@ async def generic_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc)},
-        headers={"Access-Control-Allow-Origin": "*"}
+        headers={"Access-Control-Allow-Origin": "*"},
     )
-
 
 # Health check
 @app.get("/health")
 async def health():
     return {"ok": True}
 
-
 # Request models
 class AnalyzeBody(BaseModel):
     mode: Literal["summarize", "simplify", "qa"]
     text: Optional[str] = None
     question: Optional[str] = None
-    model: Optional[str] = "llama3.2"
-
 
 class SimpleBody(BaseModel):
     text: str
 
-
-# Upload file API
+# Upload file
 @app.post("/upload")
 async def upload(file: UploadFile = File(...)):
     raw = await file.read()
@@ -81,57 +75,45 @@ async def upload(file: UploadFile = File(...)):
     risks = highlight_risks(text)
     return {"text": text, "sections": sections, "risks": risks}
 
-
-# Analyze text API
-GEMINI_MODEL = "gemini-1.5-flash-latest"
-
+# Analyze text
 @app.post("/analyze")
 async def analyze(body: AnalyzeBody):
     if not body.text:
         raise HTTPException(status_code=400, detail="text required")
 
-    # ✅ Use Gemini client if llama3.2
-    if body.model == "llama3.2":
-        model = GEMINI_MODEL
-        prompt_text = body.text[:2000]  # Gemini token limit
-        # Map modes to Gemini functions
-        if body.mode == "summarize":
-            out = gemini_client.enhance_summary(prompt_text)
-        elif body.mode == "simplify":
-            out = gemini_client.enhance_summary(prompt_text)  # Gemini simplify not separate
-        elif body.mode == "qa":
-            q = body.question or ""
-            out = gemini_client.enhance_summary(f"Question: {q}\nContent: {prompt_text}")
-        else:
-            raise HTTPException(status_code=400, detail="unsupported mode")
-        return {"result": out, "powered_by": "Google Gemini AI"}
+    prompt = ""
+    options = {"temperature": 0.3, "num_predict": 512}
 
-    # Otherwise, fallback to existing generate (if you have other models running locally)
-    prompt = {
-        "summarize": SUMMARIZE_PROMPT.format(content=body.text[:120000]),
-        "simplify": SIMPLIFY_PROMPT.format(content=body.text[:16000]),
-        "qa": QA_PROMPT.format(content=body.text[:120000], question=body.question or ""),
-    }.get(body.mode)
-
-    if not prompt:
+    if body.mode == "summarize":
+        prompt = SUMMARIZE_PROMPT.format(content=body.text[:120000])
+    elif body.mode == "simplify":
+        prompt = SIMPLIFY_PROMPT.format(content=body.text[:16000])
+        options["num_predict"] = 400
+    elif body.mode == "qa":
+        q = body.question or ""
+        prompt = QA_PROMPT.format(content=body.text[:120000], question=q)
+        options["temperature"] = 0.2
+        options["num_predict"] = 384
+    else:
         raise HTTPException(status_code=400, detail="unsupported mode")
 
-    out = generate(prompt, model=body.model, options={"temperature": 0.3, "num_predict": 512})
-    return {"result": out}
+    try:
+        out = gemini_generate(prompt, options=options)
+        return {"result": out, "powered_by": "Google Gemini AI"}
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"AI service error: {str(e)}")
 
-
-
+# Enhance summary
 @app.post("/enhance-summary")
 async def enhance_summary(body: SimpleBody):
     if not body.text:
         raise HTTPException(status_code=400, detail="Text required")
 
-    enhanced = gemini_client.enhance_summary(body.text[:2000])
-    if enhanced:
+    try:
+        enhanced = gemini_generate(f"Enhance summary:\n{body.text[:2000]}", options={"num_predict": 512})
         return {"enhanced_summary": enhanced, "powered_by": "Google Gemini AI"}
-    else:
-        raise HTTPException(status_code=503, detail="Google AI Studio not available")
-
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Google AI Studio not available: {str(e)}")
 
 # Risk analysis
 @app.post("/risk-analysis")
@@ -139,12 +121,11 @@ async def risk_analysis(body: SimpleBody):
     if not body.text:
         raise HTTPException(status_code=400, detail="Text required")
 
-    result = gemini_client.risk_analysis(body.text)
-    if result:
+    try:
+        result = gemini_generate(f"Analyze risks:\n{body.text[:2000]}", options={"num_predict": 512})
         return {"risk_analysis": result, "powered_by": "Google Gemini AI"}
-    else:
-        raise HTTPException(status_code=503, detail="Risk analysis unavailable")
-
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Risk analysis unavailable: {str(e)}")
 
 # Translate to Hindi
 @app.post("/translate-hindi")
@@ -152,18 +133,17 @@ async def translate_hindi(body: SimpleBody):
     if not body.text:
         raise HTTPException(status_code=400, detail="Text required")
 
-    result = gemini_client.translate_hindi(body.text[:1000])
-    if result:
+    try:
+        result = gemini_generate(f"Translate to Hindi:\n{body.text[:1000]}", options={"num_predict": 512})
         return {"hindi_translation": result, "powered_by": "Google Gemini AI"}
-    else:
-        raise HTTPException(status_code=503, detail="Translation unavailable")
-
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Translation unavailable: {str(e)}")
 
 # Google AI status
 @app.get("/google-ai-status")
 async def google_ai_status():
     return {
-        "google_ai_available": getattr(gemini_client, "available", False),
+        "google_ai_available": True,
         "service": "Google AI Studio (Free Tier)",
         "model": "Gemini 1.5 Flash",
         "billing_required": False,
