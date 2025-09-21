@@ -80,6 +80,7 @@ async def upload(file: UploadFile = File(...)):
 
 
 # Analyze text
+# Analyze text
 @app.post("/analyze")
 async def analyze(body: AnalyzeBody):
     if not body.text:
@@ -88,6 +89,7 @@ async def analyze(body: AnalyzeBody):
     prompt = ""
     options = {"temperature": 0.3, "num_predict": 512}
 
+    # Mode handling
     if body.mode == "summarize":
         prompt = SUMMARIZE_PROMPT.format(content=body.text[:120000])
     elif body.mode == "simplify":
@@ -101,11 +103,18 @@ async def analyze(body: AnalyzeBody):
     else:
         raise HTTPException(status_code=400, detail="unsupported mode")
 
+    # Provider handling
     try:
-        out = gemini_generate(prompt, options=options)
-        return {"result": out, "powered_by": "Google Gemini AI"}
+        if getattr(body, "provider", "gemini") == "ollama":
+            out = ollama_generate(prompt, options=options)
+            return {"result": out, "powered_by": "Ollama"}
+        else:
+            out = gemini_generate(prompt, options=options)
+            return {"result": out, "powered_by": "Google Gemini AI"}
+
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"AI service error: {str(e)}")
+
 
 # Enhance summary
 @app.post("/enhance-summary")
