@@ -11,25 +11,13 @@ from backend.ollama_client import generate
 from backend.gemini_client import gemini_client
 
 load_dotenv(override=False)
-
-from extract import extract_text, split_sections, highlight_risks
-from prompts import SUMMARIZE_PROMPT, SIMPLIFY_PROMPT, QA_PROMPT
-from ollama_client import generate
-from gemini_client import gemini_client
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 app = FastAPI(title="Local Legal Assistant API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=["https://nyaysathi-tawny.vercel.app", "http://localhost:3000"],
+    allow_credentials=False,
     allow_methods=["*"],
-    allow_origins=["*"], 
-    allow_credentials=True,
-    allow_methods=["*"], 
     allow_headers=["*"],
 )
 
@@ -74,12 +62,6 @@ async def analyze(body: AnalyzeBody):
     return {"error": "unsupported mode"}
 
 @app.post("/enhance-summary")
-async def enhance_summary(body: AnalyzeBody):
-    if not body.text:
-        return {"error": "text required"}
-    return {"error":"unsupported mode"}
-
-@app.post("/enhance-summary")
 async def enhance_summary(body: SimpleBody):
     """Enhance Ollama summary with Google Gemini insights"""
     if not body.text:
@@ -92,8 +74,6 @@ async def enhance_summary(body: SimpleBody):
         raise HTTPException(status_code=503, detail="Google AI Studio not available")
 
 @app.post("/risk-analysis")
-async def risk_analysis(body: AnalyzeBody):
-    result = gemini_client.risk_analysis(body.text or "")
 async def risk_analysis(body: SimpleBody):
     """Legal risk analysis using Google Gemini"""
     if not body.text:
@@ -107,8 +87,6 @@ async def risk_analysis(body: SimpleBody):
         raise HTTPException(status_code=503, detail="Risk analysis unavailable")
 
 @app.post("/translate-hindi")
-async def translate_hindi(body: AnalyzeBody):
-    result = gemini_client.translate_hindi((body.text or "")[:1000])
 async def translate_hindi(body: SimpleBody):
     """Translate to Hindi using Google Gemini (no billing required)"""
     if not body.text:
