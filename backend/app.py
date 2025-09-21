@@ -106,10 +106,10 @@ async def analyze(body: AnalyzeBody):
     # Provider handling
     try:
         if getattr(body, "provider", "gemini") == "ollama":
-            out = ollama_generate(prompt, options=options)
+            out = generate(prompt, options=options)
             return {"result": out, "powered_by": "Ollama"}
         else:
-            out = gemini_generate(prompt, options=options)
+            out = generate(prompt, options=options)
             return {"result": out, "powered_by": "Google Gemini AI"}
 
     except Exception as e:
