@@ -170,18 +170,18 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 
 Nyaysathi/
 ├── backend/
-│   ├── app.py              # FastAPI main application
-│   ├── gemini_client.py    # Google AI integration
-│   ├── extract.py          # Document processing
-│   ├── prompts.py          # AI prompt templates
-│   └── requirements.txt    # Python dependencies
+│ ├── app.py # FastAPI main application
+│ ├── gemini_client.py # Google AI integration
+│ ├── extract.py # Document processing
+│ ├── prompts.py # AI prompt templates
+│ └── requirements.txt # Python dependencies
 ├── frontend/
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── App.tsx         # Main application
-│   │   └── api.ts          # Backend communication
-│   ├── package.json        # Node dependencies
-│   └── index.html          # Entry point
+│ ├── src/
+│ │ ├── components/ # React components
+│ │ ├── App.tsx # Main application
+│ │ └── api.ts # Backend communication
+│ ├── package.json # Node dependencies
+│ └── index.html # Entry point
 └── README.md
 
 
