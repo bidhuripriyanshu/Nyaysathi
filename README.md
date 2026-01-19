@@ -163,9 +163,6 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 ### AI Models
 - *Llama 3.2* (local processing)
 - *Google Gemini 1.5 Flash* (cloud enhancement)
->>>>>>> 32761dfe8c0c571598b4021dd0d48ce083f08778
-=======
->>>>>>> upstream/main
 
 ---
 
@@ -173,19 +170,20 @@ Open [http://localhost:5173](http://localhost:5173) to access NyaySaathi!
 
 Nyaysathi/
 ├── backend/
-│ ├── app.py # FastAPI main application
-│ ├── gemini_client.py # Google AI integration
-│ ├── extract.py # Document processing
-│ ├── prompts.py # AI prompt templates
-│ └── requirements.txt # Python dependencies
+│   ├── app.py              # FastAPI main application
+│   ├── gemini_client.py    # Google AI integration
+│   ├── extract.py          # Document processing
+│   ├── prompts.py          # AI prompt templates
+│   └── requirements.txt    # Python dependencies
 ├── frontend/
-│ ├── src/
-│ │ ├── components/ # React components
-│ │ ├── App.tsx # Main application
-│ │ └── api.ts # Backend communication
-│ ├── package.json # Node dependencies
-│ └── index.html # Entry point
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── App.tsx         # Main application
+│   │   └── api.ts          # Backend communication
+│   ├── package.json        # Node dependencies
+│   └── index.html          # Entry point
 └── README.md
+
 
 
 
