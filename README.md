@@ -187,26 +187,18 @@ Nyaysathi/
 │ └── index.html # Entry point
 └── README.md
 
-text
+
 
 ---
 
-## 🔧 Configuration
+
 
 ### Environment Variables
-<<<<<<< HEAD
-
-Create `backend/.env` (optional):
-
-Create backend/.env (optional):
->>>>>>> 32761dfe8c0c571598b4021dd0d48ce083f08778
-=======
 Create `backend/.env`:
->>>>>>> upstream/main
 GEMINI_API_KEY=your-google-ai-studio-key
 OLLAMA_URL=http://localhost:11434
 
-text
+
 
 ### Customization
 - **Models**: Change AI models in `gemini_client.py` and via Ollama
