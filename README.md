@@ -9,7 +9,7 @@
 
 NyaySaathi is an intelligent web application that makes complex legal documents accessible to everyone. Using a hybrid AI approach with local processing (Ollama) and cloud enhancement (Google AI), it provides contract summarization, risk analysis, clause simplification, and multilingual translation.
 
-![NyaySaathi Demo](https://via.placeholder.com/800x400/1a2238/ffffff?text=NyaySaathi+Legal+Assistant+Demo)
+![NyaySaathi Demo](https://nyaysathi-tawny.vercel.app)
 
 > *Democratizing Legal Document Understanding with Dual AI Technology*
 
@@ -303,13 +303,4 @@ If NyaySaathi helps you understand legal documents better, please consider givin
 
 **Made with ❤️ for accessible legal technology**
 
-[🌟 Star this repo](https://github.com/daiwikpc/Nyaysathi) • [🍴 Fork it](https://github.com/daiwikpc/Nyaysathi/fork) • [📝 Contribute](https://github.com/daiwikpc/Nyaysathi/blob/main/CONTRIBUTING.md)
-
-</div>
-
-*Made with ❤ for accessible legal technology*
-
-[🌟 Star this repo](https://github.com/NigHtMare16K/Nyaysathi) • [🍴 Fork it](https://github.com/NigHtMare16K/Nyaysathi/fork) • [📝 Contribute](https://github.com/NigHtMare16K/Nyaysathi/blob/main/CONTRIBUTING.md)
-
-</div>
 
